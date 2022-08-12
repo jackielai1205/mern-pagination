@@ -17,7 +17,7 @@ class showBookDetails extends Component {
     const id = this.props.router.params.id;
     axios
     //    console.log("Print id: " + this.props.match.params.id);
-      .get('http://localhost:5001/api/books/'+ id)
+      .get('https://book-store-website-aut.herokuapp.com/api/books/'+ id)
       .then(res => {
         // console.log("Print-showBookDetails-API-response: " + res.data);
         this.setState({
@@ -31,7 +31,7 @@ class showBookDetails extends Component {
 
   onDeleteClick (id) {
     axios
-      .delete('http://localhost:5001/api/books/'+id)
+      .delete('https://book-store-website-aut.herokuapp.com/api/books/'+id)
       .then(res => {
         //history.push("/");
       })

@@ -25,7 +25,7 @@ class UpdateBookInfo extends Component {
   componentDidMount() {
     // console.log("Print id: " + this.props.match.params.id);
     axios
-      .get('http://localhost:5001/api/books/'+ this.id)
+      .get('https://book-store-website-aut.herokuapp.com/api/books/'+ this.id)
       .then(res => {
         // this.setState({...this.state, book: res.data})
         this.setState({
@@ -59,7 +59,7 @@ class UpdateBookInfo extends Component {
     };
 
     axios
-      .put('http://localhosl:5001/api/books/'+this.id, data)
+      .put('https://book-store-website-aut.herokuapp.com/api/books/'+this.id, data)
       .then(res => {
         //console.log(history);
         //history.push('/show-book/'+this.props.match.params.id);
