@@ -30,6 +30,7 @@ const express = require('express');
 const connectDB = require('./config/db');
 var cors = require('cors');
 const path = require("path");
+require("dotenv").config({ path: "./config.env" });
 
 
 
@@ -41,23 +42,32 @@ const app = express();
 // Connect Database
 connectDB();
 
-app.use(express.static(path.resolve(__dirname, "./client/build")));
-app.get("*", function (request, response) {
-  response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
-});
+if(process.env.NODE_ENV==="production"){
+  app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-// cors
-app.use(cors({ origin: true, credentials: true }));
+  app.get("*", function (request, response) {
+    response("hello");
+  });
+}else{
+  res.send('API running');
+}
 
-// Init Middleware
-app.use(express.json({ extended: false }));
 
-app.get('/', (req, res) => res.send('Hello world!'));
 
-// use Routes
-app.use('/api/books', books);
 
-const port = process.env.PORT || 8082;
+
+// // cors
+// app.use(cors({ origin: true, credentials: true }));
+
+// // Init Middleware
+// app.use(express.json({ extended: false }));
+
+// app.get('/', (req, res) => res.send('Hello world!'));
+
+// // use Routes
+// app.use('/api/books', books);
+
+const port = process.env.PORT;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
