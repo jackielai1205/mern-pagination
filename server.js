@@ -1,27 +1,63 @@
-require("dotenv").config({ path: "./config.env" });
-const path = require('path');
-const express = require("express");
-const connectDB = require("./config/db");
-const postRoutes = require("./routes/postRoutes");
+// require("dotenv").config({ path: "./config.env" });
+// const path = require('path');
+// const express = require("express");
+// const connectDB = require("./config/db");
+// const postRoutes = require("./routes/postRoutes");
 
-connectDB();
+// connectDB();
+
+// const app = express();
+
+// app.use(express.json());
+
+// app.use("/api/v1/posts", postRoutes);
+
+// if(process.env.NOE_ENV === "production"){
+//     app.use(express.static(path.join(__dirname, '/client/build')));
+
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+//     })
+// }else {
+//     app.get('/', (req, res)=>{ 
+//         res.send("API");
+//     })
+// }
+// const PORT = process.env.PORT;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const express = require('express');
+const connectDB = require('./config/db');
+var cors = require('cors');
+const path = require("path");
+
+
+
+// routes
+const books = require('./routes/api/books');
 
 const app = express();
 
-app.use(express.json());
+// Connect Database
+connectDB();
 
-app.use("/api/v1/posts", postRoutes);
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.get("*", function (request, response) {
+  response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+});
 
-if(process.env.NODE_ENV === "production"){
-    app.use(express.static(path.join(__dirname, '/client/build')));
+// cors
+app.use(cors({ origin: true, credentials: true }));
 
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-    })
-}else {
-    app.get('/', (req, res)=>{ 
-        res.send("API");
-    })
-}
-const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Init Middleware
+app.use(express.json({ extended: false }));
+
+app.get('/', (req, res) => res.send('Hello world!'));
+
+// use Routes
+app.use('/api/books', books);
+
+const port = process.env.PORT || 8082;
+
+app.listen(port, () => console.log(`Server running on port ${port}`));
+
