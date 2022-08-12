@@ -26,29 +26,29 @@
 // const PORT = process.env.PORT;
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-const express = require('express');
-const connectDB = require('./config/db');
-var cors = require('cors');
-const path = require("path");
-require("dotenv").config({ path: "./config.env" });
+// const express = require('express');
+// const connectDB = require('./config/db');
+// var cors = require('cors');
+// const path = require("path");
+// require("dotenv").config({ path: "./config.env" });
 
 
 
-// routes
-const books = require('./routes/api/books');
+// // routes
+// const books = require('./routes/api/books');
 
-const app = express();
+// const app = express();
 
-// Connect Database
-connectDB();
+// // Connect Database
+// connectDB();
 
-if(process.env.NODE_ENV==="production"){
-  app.use(express.static(path.resolve(__dirname, "./client/build")));
+// if(process.env.NODE_ENV==="production"){
+//   app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-  app.use('/api/books', books);
-}else{
-  res.send('API running');
-}
+//   app.use('/api/books', books);
+// }else{
+//   res.send('API running');
+// }
 
 
 
@@ -65,7 +65,37 @@ if(process.env.NODE_ENV==="production"){
 // // use Routes
 // app.use('/api/books', books);
 
-const port = process.env.PORT;
+// const port = process.env.PORT;
+
+// app.listen(port, () => console.log(`Server running on port ${port}`));
+
+const express = require('express');
+const connectDB = require('./config/db');
+var cors = require('cors');
+const path = require("path");
+require("dotenv").config({ path: "./config.env" });
+
+
+
+// routes
+const books = require('./routes/api/books');
+
+const app = express();
+
+// Connect Database
+connectDB();
+
+// cors
+app.use(cors({ origin: true, credentials: true }));
+
+// Init Middleware
+app.use(express.json({ extended: false }));
+
+app.get('/', (req, res) => res.send('Hello world!'));
+
+// use Routes
+app.use('/api/books', books);
+
+const port = process.env.PORT || 8082;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
-
