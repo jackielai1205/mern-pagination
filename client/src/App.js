@@ -1,60 +1,54 @@
-import { useState, useEffect } from "react";
-import "./App.css";
+import React, { Component } from 'react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  useParams
+} from "react-router-dom";
+import './App.css';
+import history from './components/history';
 
-// Components
-import Card from "./components/Card";
-import Pagination from "./components/Pagination";
+import CreateBook from './components/CreateBook';
+import ShowBookList from './components/ShowBookList';
+import ShowBookDetails from './components/ShowBookDetails';
+import UpdateBookInfo from './components/UpdateBookInfo';
 
-const App = ({ match }) => {
-  const pageNumber = match.params.pageNumber || 1;
+function withRouter(Component) {
+  function ComponentWithRouterProp(props) {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        router={{ location, navigate, params }}
+      />
+    );
+  }
 
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  return ComponentWithRouterProp;
+}
 
-  const [page, setPage] = useState(pageNumber);
-  const [pages, setPages] = useState(1);
+const Createbookroute = withRouter(CreateBook);
+const ShowBooklistroute = withRouter(ShowBookList);
+const Showbookroute = withRouter(ShowBookDetails);
+const Updatebookroute = withRouter(UpdateBookInfo);
 
-  useEffect(() => {
-    const fecthPosts = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`/api/v1/posts?page=${page}`);
-
-        const { data, pages: totalPages } = await res.json();
-
-        setPages(totalPages);
-        setPosts(data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-        setError("Some error occured");
-      }
-    };
-
-    fecthPosts();
-  }, [page]);
-
-  return (
-    <div className="app">
-      {loading ? (
-        <h3 className="loading-text">Loading...</h3>
-      ) : error ? (
-        <h3 className="error-text">{error}</h3>
-      ) : (
-        <>
-          <Pagination page={page} pages={pages} changePage={setPage} />
-          <div className="app__posts">
-            {posts.map((post) => (
-              <Card key={post._id} post={post} />
-            ))}
-          </div>
-          <Pagination page={page} pages={pages} changePage={setPage} />
-        </>
-      )}
-    </div>
-  );
-};
+class App extends Component {
+  render() {
+    return (
+      <BrowserRouter>
+        <Routes history = {history}>
+            <Route exact path='/' element={<ShowBooklistroute/>} />
+            <Route path='/create-book' element={<Createbookroute/>} />
+            <Route path='/edit-book/:id' element={<Updatebookroute/>} />
+            <Route path='/show-book/:id' element={<Showbookroute/>} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+}
 
 export default App;
