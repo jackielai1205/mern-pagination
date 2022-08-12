@@ -42,13 +42,7 @@
 // // Connect Database
 // connectDB();
 
-// if(process.env.NODE_ENV==="production"){
-//   app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-//   app.use('/api/books', books);
-// }else{
-//   res.send('API running');
-// }
 
 
 
@@ -85,17 +79,25 @@ const app = express();
 // Connect Database
 connectDB();
 
-// cors
-app.use(cors({ origin: true, credentials: true }));
+if(process.env.NODE_ENV==="production"){
+  app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-// Init Middleware
-app.use(express.json({ extended: false }));
+  // cors
+  app.use(cors({ origin: true, credentials: true }));
 
-app.get('/', (req, res) => res.send('Hello world!'));
+  // Init Middleware
+  app.use(express.json({ extended: false }));
 
-// use Routes
-app.use('/api/books', books);
+  app.get('/', (req, res) => res.send('Hello world!'));
 
-const port = process.env.PORT || 8082;
+  // use Routes
+  app.use('/api/books', books);
+
+  const port = process.env.PORT || 8082;
+
+}else{
+  res.send('API running');
+}
+
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
