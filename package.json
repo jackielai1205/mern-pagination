@@ -4,8 +4,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "start": "concurrently --kill-others-on-fail \"npm run server\"",
+    "app": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd client && npm start",
+    "install-client": "npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "server": "nodemon app.js",
+    "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix client\""
   },
   "keywords": [],
   "author": "",

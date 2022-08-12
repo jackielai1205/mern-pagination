@@ -45,9 +45,7 @@ connectDB();
 if(process.env.NODE_ENV==="production"){
   app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-  app.get("*", function (request, response) {
-    response("hello");
-  });
+  app.use('/api/books', books);
 }else{
   res.send('API running');
 }
